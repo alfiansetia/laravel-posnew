@@ -17,6 +17,7 @@ function logout_() {
     }).then((result) => {
         if (result.isConfirmed) {
             $('#form_logout').submit();
+            block()
         }
     })
 }
@@ -46,7 +47,3 @@ function block() {
         }
     });
 }
-
-$('form').submit(function () {
-    block()
-})

@@ -11,8 +11,8 @@
     <div class="sidebar">
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-legacy"
-                data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-legacy" data-widget="treeview"
+                role="menu" data-accordion="false">
                 <li class="nav-item">
                     <a href="{{ route('home') }}" class="nav-link  {{ $title == 'Dashboard' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-th"></i>
@@ -24,16 +24,22 @@
                 </li>
 
                 <li
-                    class="nav-item {{ $title == 'Category' || $title == 'Product' || $title == 'User' ? 'menu-open' : '' }}">
+                    class="nav-item {{ $title == 'Category' || $title == 'Product' || $title == 'User' || $title == 'Supplier' ? 'menu-open' : '' }}">
                     <a href="#"
-                        class="nav-link {{ $title == 'Category' || $title == 'Product' || $title == 'User' ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        class="nav-link {{ $title == 'Category' || $title == 'Product' || $title == 'User' || $title == 'Supplier' ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-database"></i>
                         <p>
                             Master Data
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('supplier.index') }}" class="nav-link {{ $title == 'Supplier' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Supplier</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ route('category.index') }}"
                                 class="nav-link {{ $title == 'Category' ? 'active' : '' }}">

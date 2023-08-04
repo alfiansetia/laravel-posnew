@@ -10,6 +10,27 @@ $(function () {
             theme: 'bootstrap4'
         })
     }
+
+    if ($('#form').length > 0) {
+        $('#form').validate({
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.col-sm-10').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+                $(element).addClass('is-valid');
+            },
+        });
+    }
+
+    if ($('[data-mask]').length > 0) {
+        $('[data-mask]').inputmask()
+    }
 });
 
 function deleteData(action) {

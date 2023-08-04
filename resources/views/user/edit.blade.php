@@ -24,7 +24,8 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <form class="form-horizontal" method="POST" action="{{ route('user.update', $data->id) }}">
+                            <form id="form" class="form-horizontal" method="POST"
+                                action="{{ route('user.update', $data->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body">
@@ -60,7 +61,9 @@
                                         <div class="col-sm-10">
                                             <input type="tel" name="phone"
                                                 class="form-control @error('phone') is-invalid @enderror" id="phone"
-                                                placeholder="Phone" value="{{ $data->phone }}" maxlength="50" required>
+                                                placeholder="Phone" value="{{ $data->phone }}" maxlength="50"
+                                                data-inputmask="'mask': ['999999999999', '99999999999[9]']" data-mask
+                                                required>
                                             @error('phone')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -141,6 +144,14 @@
 @push('jslib')
     <!-- Select2 -->
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+
+    <!-- InputMask -->
+    <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+
+    <!-- jquery-validation -->
+    <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
     <script src="{{ asset('js/custom_crud.js') }}"></script>
 @endpush
 

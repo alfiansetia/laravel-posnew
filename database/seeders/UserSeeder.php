@@ -29,5 +29,7 @@ class UserSeeder extends Seeder
             'role'      => 'user',
             'status'    => 'active',
         ]);
+
+        User::factory(50)->create();
     }
 }

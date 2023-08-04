@@ -21,7 +21,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <form class="form-horizontal" method="POST" action="{{ route('category.update', $data->id) }}">
+                            <form id="form" class="form-horizontal" method="POST" action="{{ route('category.update', $data->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body">
@@ -30,7 +30,8 @@
                                         <div class="col-sm-10">
                                             <input type="text" name="name"
                                                 class="form-control @error('name') is-invalid @enderror" id="name"
-                                                placeholder="Name" value="{{ $data->name }}" maxlength="50" required autofocus>
+                                                placeholder="Name" value="{{ $data->name }}" maxlength="50" required
+                                                autofocus>
                                             @error('name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -73,6 +74,11 @@
 @endsection
 
 @push('jslib')
+    <!-- jquery-validation -->
+    <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+    <script src="{{ asset('js/custom_crud.js') }}"></script>
 @endpush
 
 @push('js')
