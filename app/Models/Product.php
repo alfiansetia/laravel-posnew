@@ -10,6 +10,15 @@ class Product extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public function getImageAttribute($value)
+    {
+        if ($value) {
+            return url('/images/product/' . $value);
+        } else {
+            return url('/images/product/default.jpg');
+        }
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

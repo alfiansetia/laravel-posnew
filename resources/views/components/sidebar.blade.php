@@ -48,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ $title == 'Product' ? 'active' : '' }}">
+                            <a href="{{ route('product.index') }}" class="nav-link {{ $title == 'Product' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Product</p>
                             </a>
