@@ -72,7 +72,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        abort(404);
+        $data = $user;
+        return view('user.detail', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**

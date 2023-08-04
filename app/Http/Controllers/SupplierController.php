@@ -45,7 +45,7 @@ class SupplierController extends Controller
     {
         $this->validate($request, [
             'name'      => 'required|min:3|max:50',
-            'email'     => 'required|min:3|max:50|email|unique:suppliers,email',
+            'email'     => 'required|min:3|max:50|email',
             'phone'     => 'required|digits_between:8,15',
             'address'   => 'nullable|min:3|max:100',
         ]);
@@ -67,7 +67,8 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        abort(404);
+        $data = $supplier->loadCount('product');
+        return view('supplier.detail', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -86,7 +87,7 @@ class SupplierController extends Controller
     {
         $this->validate($request, [
             'name'      => 'required|min:3|max:50',
-            'email'     => 'required|min:3|max:50|email|unique:suppliers,email,' . $supplier->id,
+            'email'     => 'required|min:3|max:50|email,' . $supplier->id,
             'phone'     => 'required|digits_between:8,15',
             'address'   => 'nullable|min:3|max:100',
         ]);

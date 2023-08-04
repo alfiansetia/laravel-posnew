@@ -63,7 +63,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        abort(404);
+        $data = $category->loadCount('product');
+        return view('category.detail', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**

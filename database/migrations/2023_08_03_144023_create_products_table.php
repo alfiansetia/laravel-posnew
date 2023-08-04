@@ -26,8 +26,10 @@ return new class extends Migration
             $table->integer('purc_price')->default(0);
             $table->enum('status', ['active', 'nonactive'])->default('active');
             $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
             $table->foreign('supplier_id')->references('id')->on('suppliers')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

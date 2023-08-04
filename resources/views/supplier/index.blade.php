@@ -44,6 +44,10 @@
                                             <td>{{ $item->address }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group">
+                                                    <a href="{{ route('supplier.show', $item->id) }}"
+                                                        class="btn btn-sm btn-info">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </a>
                                                     <a href="{{ route('supplier.edit', $item->id) }}"
                                                         class="btn btn-sm btn-warning">
                                                         <i class="fas fa-edit"></i>

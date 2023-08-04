@@ -59,7 +59,7 @@
                                     <div class="form-group row">
                                         <label for="phone" class="col-sm-2 col-form-label">Phone</label>
                                         <div class="col-sm-10">
-                                            <input type="tel" name="phone"
+                                            <input type="text" name="phone"
                                                 class="form-control @error('phone') is-invalid @enderror" id="phone"
                                                 placeholder="Phone" value="{{ $data->phone }}" maxlength="50"
                                                 data-inputmask="'mask': ['999999999999', '99999999999[9]']" data-mask
