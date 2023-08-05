@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone')->nullable();
-            $table->enum('avatar', ['boy1.png', 'boy2.png', 'girl1.png', 'girl2.png'])->default('boy1.png');
+            $table->enum('avatar', ['avatar1.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'])->default('avatar1.png');
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->enum('status', ['active', 'nonactive'])->default('active');
             $table->rememberToken();
