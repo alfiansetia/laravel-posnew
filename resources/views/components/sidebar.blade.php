@@ -35,7 +35,8 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('supplier.index') }}" class="nav-link {{ $title == 'Supplier' ? 'active' : '' }}">
+                            <a href="{{ route('supplier.index') }}"
+                                class="nav-link {{ $title == 'Supplier' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Supplier</p>
                             </a>
@@ -48,7 +49,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('product.index') }}" class="nav-link {{ $title == 'Product' ? 'active' : '' }}">
+                            <a href="{{ route('product.index') }}"
+                                class="nav-link {{ $title == 'Product' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Product</p>
                             </a>
@@ -70,6 +72,25 @@
                             <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
+                </li>
+                <li class="nav-item {{ $title == 'Profile' || $title == 'Company' ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ $title == 'Profile' || $title == 'Company' ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tools"></i>
+                        <p>
+                            Settings
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('setting.profile') }}"
+                                class="nav-link {{ $title == 'Profile' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Profile</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>
