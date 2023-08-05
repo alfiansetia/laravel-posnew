@@ -32,7 +32,7 @@
                                         <div class="col-sm-9">
                                             <input type="text" name="code"
                                                 class="form-control @error('code') is-invalid @enderror" id="code"
-                                                placeholder="Code" value="{{ old('code') }}" maxlength="50" required
+                                                placeholder="Code" value="{{ old('code', $last) }}" maxlength="50" required
                                                 autofocus>
                                             @error('code')
                                                 <div class="invalid-feedback">
@@ -206,7 +206,7 @@
                                         <div class="col-sm-9">
                                             <input type="text" name="unit"
                                                 class="form-control @error('unit') is-invalid @enderror" id="unit"
-                                                placeholder="Unit" value="{{ old('unit', 'pcs') }}" maxlength="50"
+                                                placeholder="Unit" value="{{ old('unit', 'PCS') }}" maxlength="50"
                                                 required autofocus>
                                             @error('unit')
                                                 <div class="invalid-feedback">

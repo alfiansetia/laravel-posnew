@@ -9,7 +9,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Detail {{ $title }}</h3>
+                            <h3 class="card-title">Detail {{ $title }} <a
+                                    href="{{ route('supplier.edit', $data->id) }}"><i class="fas fa-edit ml-1"></i></a></h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -35,14 +36,6 @@
                                             <b class="d-block">{{ $data->address }}</b>
                                         </p>
                                     </div>
-                                    <div class="text-center mt-5 mb-3">
-                                        <a href="{{ route('supplier.index') }}" class="btn btn-secondary">
-                                            <i class="fas fa-arrow-left mr-1"></i>Back
-                                        </a>
-                                        <a href="{{ route('supplier.create') }}" class="btn btn-primary">
-                                            <i class="fas fa-plus mr-1"></i>Add Data
-                                        </a>
-                                    </div>
                                 </div>
                                 <div class="col-12 col-md-12 col-lg-6 order-2 order-md-2">
                                     <div class="row">
@@ -57,6 +50,15 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="text-center mt-5 mb-3">
+                                <a href="{{ route('supplier.index') }}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left mr-1"></i>Back
+                                </a>
+                                <a href="{{ route('supplier.create') }}" class="btn btn-primary">
+                                    <i class="fas fa-plus mr-1"></i>Add Data
+                                </a>
                             </div>
                         </div>
                         <!-- /.card-body -->

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('name');
             $table->string('desc')->nullable();
-            $table->string('unit')->default('pcs');
+            $table->string('unit')->default('PCS');
             $table->string('image')->nullable();
             $table->integer('disc')->default(0);
             $table->integer('stock')->default(0);

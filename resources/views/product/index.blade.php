@@ -43,7 +43,9 @@
                                             <td>{{ $item->name }}</td>
                                             <td>{{ $item->category->name }}</td>
                                             <td>{{ $item->stock }}</td>
-                                            <td class="text-center">{{ $item->status }}</td>
+                                            <td class="text-center"><span
+                                                    class="badge badge-{{ $item->status == 'active' ? 'success' : 'danger' }}">{{ $item->status }}</span>
+                                            </td>
                                             <td class="text-center">
                                                 <div class="btn-group">
                                                     <a href="{{ route('product.show', $item->id) }}"

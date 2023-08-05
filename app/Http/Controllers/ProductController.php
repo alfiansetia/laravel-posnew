@@ -7,11 +7,14 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
     private $comp;
     private $title = 'Product';
+
+    private $image_path;
 
     /**
      * Create a new controller instance.
@@ -21,6 +24,7 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->comp = Company::first();
+        $this->image_path = public_path('images/product/');
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +42,8 @@ class ProductController extends Controller
     {
         $category = Category::all();
         $supplier = Supplier::all();
-        return view('product.create', compact(['category', 'supplier']))->with(['title' => $this->title, 'company' => $this->comp]);
+        $last = 'P-' . str_pad((Product::latest('id')->first()->id ?? 0) + 1, 4, '0', STR_PAD_LEFT);
+        return view('product.create', compact(['category', 'supplier', 'last']))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -48,6 +53,7 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'sku'       => 'nullable|max:50',
+            'code'      => 'required|max:50|unique:products,code',
             'name'      => 'required|max:50|min:3',
             'desc'      => 'nullable|max:150',
             'unit'      => 'required|max:10',
@@ -67,9 +73,8 @@ class ProductController extends Controller
         ]);
         $image = null;
         if ($files = $request->file('image')) {
-            $destinationPath = 'images/product/';
-            $logo = 'product_' . date('dmYHis') . '.' . $files->getClientOriginalExtension();
-            $files->move($destinationPath, $logo);
+            $image = 'product_' . date('dmyHis') . '.' . $files->getClientOriginalExtension();
+            $files->move($this->image_path, $image);
         }
 
         $product = Product::create([
@@ -77,7 +82,7 @@ class ProductController extends Controller
             'sku'       => $request->sku,
             'name'      => $request->name,
             'desc'      => $request->desc,
-            'unit'      => $request->unit,
+            'unit'      => strtoupper($request->unit),
             'image'     => $image,
             'disc'      => $request->discount,
             'stock'     => $request->stock,
@@ -115,7 +120,8 @@ class ProductController extends Controller
     {
         $data = $product;
         $category = Category::all();
-        return view('product.edit', compact(['data', 'category']))->with(['title' => $this->title, 'company' => $this->comp]);
+        $supplier = Supplier::all();
+        return view('product.edit', compact(['data', 'category', 'supplier']))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -123,7 +129,60 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $this->validate($request, [
+            'sku'       => 'nullable|max:50',
+            'code'      => 'required|max:50|unique:products,code,' . $product->id,
+            'name'      => 'required|max:50|min:3',
+            'desc'      => 'nullable|max:150',
+            'unit'      => 'required|max:10',
+            'image'     => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'discount'  => 'required|integer|gte:0',
+            'stock'     => 'required|integer|gte:0',
+            'min_stock' => 'required|integer|gte:0',
+            'selling_price'     => 'required|integer|gte:0',
+            'purchase_price'    => 'required|integer|gte:0',
+            'status'    => 'nullable|in:active',
+            'supplier'  => 'required|integer|exists:suppliers,id',
+            'category'  => 'required|integer|exists:categories,id',
+            'length'    => 'required|integer|gte:0',
+            'width'     => 'required|integer|gte:0',
+            'height'    => 'required|integer|gte:0',
+            'weight'    => 'required|integer|gte:0',
+        ]);
+        $image = $product->getRawOriginal('image');
+        if (!empty($image) && file_exists($this->image_path . $image)) {
+            File::delete($this->image_path . $image);
+        }
+        if ($files = $request->file('image')) {
+            $image = 'product_' . date('dmyHis') . '.' . $files->getClientOriginalExtension();
+            $files->move($this->image_path, $image);
+        }
+
+        $product = $product->update([
+            'code'      => $request->code,
+            'sku'       => $request->sku,
+            'name'      => $request->name,
+            'desc'      => $request->desc,
+            'unit'      => strtoupper($request->unit),
+            'image'     => $image,
+            'disc'      => $request->discount,
+            'stock'     => $request->stock,
+            'min_stock' => $request->min_stock,
+            'sell_price'  => $request->selling_price,
+            'purc_price'  => $request->purchase_price,
+            'supplier_id' => $request->supplier,
+            'category_id' => $request->category,
+            'status'    => $request->status ?? 'nonactive',
+            'length'    => $request->length,
+            'width'     => $request->width,
+            'height'    => $request->height,
+            'weight'    => $request->weight,
+        ]);
+        if ($product) {
+            return redirect()->route('product.index')->with(['success' => 'Update Data Success!']);
+        } else {
+            return redirect()->route('product.index')->with(['error' => 'Update Data Failed!']);
+        }
     }
 
     /**
@@ -131,6 +190,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $image = $product->getRawOriginal('image');
+        if (!empty($image) && file_exists($this->image_path . $image)) {
+            File::delete($this->image_path . $image);
+        }
         $product = $product->delete();
         if ($product) {
             return redirect()->route('product.index')->with(['success' => 'Remove Data Success!']);

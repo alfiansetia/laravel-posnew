@@ -42,8 +42,12 @@
                                             <td>{{ $item->name }}</td>
                                             <td>{{ $item->email }}</td>
                                             <td>{{ $item->phone }}</td>
-                                            <td class="text-center">{{ $item->role }}</td>
-                                            <td class="text-center">{{ $item->status }}</td>
+                                            <td class="text-center"><span
+                                                class="badge badge-{{ $item->role == 'admin' ? 'info' : 'warning' }}">{{ $item->role }}</span>
+                                        </td>
+                                            <td class="text-center"><span
+                                                    class="badge badge-{{ $item->status == 'active' ? 'success' : 'danger' }}">{{ $item->status }}</span>
+                                            </td>
                                             <td class="text-center">
                                                 <div class="btn-group">
                                                     <a href="{{ route('user.show', $item->id) }}"
