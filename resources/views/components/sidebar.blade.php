@@ -24,9 +24,9 @@
                 </li>
 
                 <li
-                    class="nav-item {{ $title == 'Category' || $title == 'Product' || $title == 'User' || $title == 'Supplier' ? 'menu-open' : '' }}">
+                    class="nav-item {{ $title == 'Category' || $title == 'Product' || $title == 'User' || $title == 'Supplier' || $title == 'Customer' ? 'menu-open' : '' }}">
                     <a href="#"
-                        class="nav-link {{ $title == 'Category' || $title == 'Product' || $title == 'User' || $title == 'Supplier' ? 'active' : '' }}">
+                        class="nav-link {{ $title == 'Category' || $title == 'Product' || $title == 'User' || $title == 'Supplier' || $title == 'Customer' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
                             Master Data
@@ -39,6 +39,13 @@
                                 class="nav-link {{ $title == 'Supplier' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Supplier</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('customer.index') }}"
+                                class="nav-link {{ $title == 'Customer' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Customer</p>
                             </a>
                         </li>
                         <li class="nav-item">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
@@ -45,4 +46,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('/category', CategoryController::class);
     Route::resource('/supplier', SupplierController::class);
     Route::resource('/product', ProductController::class);
+    Route::resource('/customer', CustomerController::class);
 });
