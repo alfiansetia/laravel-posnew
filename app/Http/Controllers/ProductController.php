@@ -150,10 +150,12 @@ class ProductController extends Controller
             'weight'    => 'required|integer|gte:0',
         ]);
         $image = $product->getRawOriginal('image');
-        if (!empty($image) && file_exists($this->image_path . $image)) {
-            File::delete($this->image_path . $image);
-        }
+
         if ($files = $request->file('image')) {
+            if (!empty($image) && file_exists($this->image_path . $image)) {
+                File::delete($this->image_path . $image);
+            }
+
             $image = 'product_' . date('dmyHis') . '.' . $files->getClientOriginalExtension();
             $files->move($this->image_path, $image);
         }

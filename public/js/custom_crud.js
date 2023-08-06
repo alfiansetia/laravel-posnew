@@ -24,7 +24,10 @@ $(function () {
             unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
                 $(element).addClass('is-valid');
-            },
+            }, submitHandler: function (form) {
+                block()
+                form.submit();
+            }
         });
     }
 

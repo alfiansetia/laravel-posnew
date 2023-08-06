@@ -14,9 +14,11 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         Company::create([
-            'name' => 'OK POS',
-            'phone' => '082322545654',
-            'address' => 'Jl Nin Dulu Aja',
+            'name'      => 'OK POS',
+            'phone'     => '082322545654',
+            'address'   => 'Jl Nin Dulu Aja',
+            'tax'       => 11,
+            'footer_thermal'    => 'Terima Kasih',
         ]);
     }
 }

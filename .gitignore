@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 /public/images/product/*
 !/public/images/product/default.jpg
+/public/images/company/*
+!/public/images/company/default.png

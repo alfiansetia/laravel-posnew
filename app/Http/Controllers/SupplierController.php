@@ -87,7 +87,7 @@ class SupplierController extends Controller
     {
         $this->validate($request, [
             'name'      => 'required|min:3|max:50',
-            'email'     => 'required|min:3|max:50|email,' . $supplier->id,
+            'email'     => 'required|min:3|max:50|email',
             'phone'     => 'required|digits_between:8,15',
             'address'   => 'nullable|min:3|max:100',
         ]);

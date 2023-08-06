@@ -168,12 +168,12 @@
                                                     accept="image/*">
                                                 <label class="custom-file-label" for="image">Choose
                                                     file</label>
+                                                @error('image')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
                                             </div>
-                                            @error('image')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
                                         </div>
                                     </div>
                                 </div>

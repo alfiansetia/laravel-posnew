@@ -36,6 +36,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/setting/profile', [SettingController::class, 'profile'])->name('setting.profile');
     Route::post('/setting/profile', [SettingController::class, 'profileUpdate'])->name('setting.profile.update');
+    Route::get('/setting/company', [SettingController::class, 'company'])->name('setting.company');
+    Route::post('/setting/company', [SettingController::class, 'companyUpdate'])->name('setting.company.update');
+    Route::get('/setting/password', [SettingController::class, 'password'])->name('setting.password');
+    Route::post('/setting/password', [SettingController::class, 'passwordUpdate'])->name('setting.password.update');
 
     Route::resource('/user', UserController::class);
     Route::resource('/category', CategoryController::class);

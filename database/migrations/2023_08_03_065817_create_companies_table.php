@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('phone');
             $table->string('logo')->nullable();
             $table->string('address');
+            $table->integer('tax')->default(0);
+            $table->string('footer_thermal')->nullable();
+            $table->integer('paper_size')->default(58);
             $table->timestamps();
         });
     }

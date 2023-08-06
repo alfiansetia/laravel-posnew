@@ -2,9 +2,9 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('home') }}" class="brand-link">
-        <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="{{ $company->name }}"
-            class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">{{ $company->name }}3</span>
+        <img src="{{ $company->logo }}" alt="{{ $company->name }}" class="brand-image img-circle elevation-3"
+            style="opacity: .8">
+        <span class="brand-text font-weight-light">{{ $company->name }}</span>
     </a>
 
     <!-- Sidebar -->
@@ -73,9 +73,10 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item {{ $title == 'Profile' || $title == 'Company' ? 'menu-open' : '' }}">
+                <li
+                    class="nav-item {{ $title == 'Profile' || $title == 'Company' || $title == 'Password' ? 'menu-open' : '' }}">
                     <a href="#"
-                        class="nav-link {{ $title == 'Profile' || $title == 'Company' ? 'active' : '' }}">
+                        class="nav-link {{ $title == 'Profile' || $title == 'Company' || $title == 'Password' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tools"></i>
                         <p>
                             Settings
@@ -88,6 +89,20 @@
                                 class="nav-link {{ $title == 'Profile' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Profile</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('setting.password') }}"
+                                class="nav-link {{ $title == 'Password' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Password</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('setting.company') }}"
+                                class="nav-link {{ $title == 'Company' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Company</p>
                             </a>
                         </li>
                     </ul>

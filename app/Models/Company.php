@@ -10,4 +10,13 @@ class Company extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function getLogoAttribute($value)
+    {
+        if ($value) {
+            return url('/images/company/' . $value);
+        } else {
+            return url('/images/company/default.png');
+        }
+    }
 }
