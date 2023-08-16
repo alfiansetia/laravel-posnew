@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Sale;
+use App\Models\SaleDetail;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,5 +30,71 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             CustomerSeeder::class,
         ]);
+
+        $sale = Sale::Create([
+            'number' => 'SLS-0001',
+            'date' => date('Y-m-d H:i:s'),
+            'user_id' => 1,
+            'customer_id' => 1,
+            'tax' => 0,
+            'total' => 50000,
+            'bill' => 50000,
+            'status' => 'unpaid',
+            'desc' => 'Pembelian ke 1',
+        ]);
+
+        for ($i = 1; $i <= 5; $i++) {
+            SaleDetail::create([
+                'sale_id' => $sale->id,
+                'product_id' => $i,
+                'price' => 10000,
+                'qty'   => 1,
+                'disc'  => 0,
+            ]);
+        }
+
+        $sale2 = Sale::Create([
+            'number' => 'SLS-0002',
+            'date' => date('Y-m-d H:i:s'),
+            'user_id' => 1,
+            'customer_id' => 1,
+            'tax' => 0,
+            'total' => 50000,
+            'bill' => 50000,
+            'status' => 'paid',
+            'desc' => 'Pembelian ke 2',
+        ]);
+
+        for ($i = 1; $i <= 5; $i++) {
+            SaleDetail::create([
+                'sale_id' => $sale2->id,
+                'product_id' => $i,
+                'price' => 10000,
+                'qty'   => 1,
+                'disc'  => 0,
+            ]);
+        }
+
+        $sale3 = Sale::Create([
+            'number' => 'SLS-0003',
+            'date' => date('Y-m-d H:i:s'),
+            'user_id' => 1,
+            'customer_id' => 1,
+            'tax' => 0,
+            'total' => 50000,
+            'bill' => 50000,
+            'status' => 'cancel',
+            'desc' => 'Pembelian ke 3',
+        ]);
+
+        for ($i = 1; $i <= 5; $i++) {
+            SaleDetail::create([
+                'sale_id' => $sale3->id,
+                'product_id' => $i,
+                'price' => 10000,
+                'qty'   => 1,
+                'disc'  => 0,
+            ]);
+        }
     }
 }

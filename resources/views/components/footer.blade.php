@@ -2,9 +2,8 @@
 <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-        Made with ❤️
+        Made with <i class="fas fa-heart text-danger"></i>
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; {{ date('Y') }} <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
-    reserved.
+    <strong>Copyright &copy; {{ date('Y') }} {{ $company->name }}.</strong> All rights reserved.
 </footer>

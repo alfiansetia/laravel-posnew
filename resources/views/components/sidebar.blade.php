@@ -71,6 +71,24 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item {{ $title == 'Sale' ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $title == 'Sale' ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>
+                            Transaction
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('sale.index') }}"
+                                class="nav-link {{ $title == 'Sale' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sale</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('category.create') }}" class="nav-link">
                         <i class="nav-icon fas fa-th"></i>

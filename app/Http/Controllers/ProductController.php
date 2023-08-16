@@ -29,9 +29,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = Product::all();
+        if ($request->ajax()) {
+            $data = Product::with('category')->where('status', 'active')->get();
+            return response()->json(['data' => $data]);
+        }
         return view('product.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
@@ -107,9 +111,12 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
         $data = $product->load('category');
+        if ($request->ajax()) {
+            return response()->json(['data' => $data]);
+        }
         return view('product.detail', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
