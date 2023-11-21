@@ -74,13 +74,8 @@
                                             <select name="category" id="category"
                                                 class="form-control select2 @error('category') is-invalid @enderror"
                                                 style="width: 100%;" required>
-                                                <option value="">Select Category</option>
-                                                @foreach ($category as $item)
-                                                    <option {{ $data->category_id == $item->id ? 'selected' : '' }}
-                                                        value="{{ $item->id }}">
-                                                        {{ $item->name }}
-                                                    </option>
-                                                @endforeach
+                                                <option value="{{ $data->category_id ?? '' }}">
+                                                    {{ $data->category->name ?? 'Select Category' }}</option>
                                             </select>
                                             @error('category')
                                                 <div class="invalid-feedback">
@@ -95,13 +90,8 @@
                                             <select name="supplier" id="supplier"
                                                 class="form-control select2 @error('supplier') is-invalid @enderror"
                                                 style="width: 100%;" required>
-                                                <option value="">Select Supplier</option>
-                                                @foreach ($supplier as $item)
-                                                    <option {{ $data->supplier_id == $item->id ? 'selected' : '' }}
-                                                        value="{{ $item->id }}">
-                                                        {{ $item->name }}
-                                                    </option>
-                                                @endforeach
+                                                <option value="{{ $data->supplier_id ?? '' }}">
+                                                    {{ $data->supplier->name ?? 'Select Supplier' }}</option>
                                             </select>
                                             @error('supplier')
                                                 <div class="invalid-feedback">
@@ -418,5 +408,67 @@
         })
 
         bsCustomFileInput.init();
+
+        $(document).ready(function() {
+            $("#category").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select a Category",
+                ajax: {
+                    delay: 1000,
+                    url: "{{ route('category.paginate') }}",
+                    data: function(params) {
+                        return {
+                            number: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: $.map(data.data, function(item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id,
+                                }
+                            }),
+                            pagination: {
+                                more: (params.page * data.per_page) < data.total,
+                            },
+                        };
+                    },
+                },
+                cache: true,
+            });
+
+            $("#supplier").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select a Supplier",
+                ajax: {
+                    delay: 1000,
+                    url: "{{ route('supplier.paginate') }}",
+                    data: function(params) {
+                        return {
+                            number: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: $.map(data.data, function(item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id,
+                                }
+                            }),
+                            pagination: {
+                                more: (params.page * data.per_page) < data.total,
+                            },
+                        };
+                    },
+                },
+                cache: true,
+            });
+        })
     </script>
 @endpush

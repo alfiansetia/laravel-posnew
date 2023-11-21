@@ -16,7 +16,7 @@ class CategorySeeder extends Seeder
         for ($i = 0; $i < 50; $i++) {
             Category::create([
                 'name' => 'Data Ke ' . $i + 1,
-                'desc' => 'Ini ada;ah deskripsi data ke ' . $i + 1,
+                'desc' => 'Ini adalah deskripsi data ke ' . $i + 1,
             ]);
         }
     }

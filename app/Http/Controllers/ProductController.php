@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
 {
@@ -31,12 +32,11 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Product::all();
         if ($request->ajax()) {
-            $data = Product::with('category')->where('status', 'active')->get();
-            return response()->json(['data' => $data]);
+            $data = Product::query()->with('category');
+            return DataTables::of($data)->setRowId('id')->toJson();
         }
-        return view('product.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
+        return view('product.index')->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -44,10 +44,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $category = Category::all();
-        $supplier = Supplier::all();
         $last = 'P-' . str_pad((Product::latest('id')->first()->id ?? 0) + 1, 4, '0', STR_PAD_LEFT);
-        return view('product.create', compact(['category', 'supplier', 'last']))->with(['title' => $this->title, 'company' => $this->comp]);
+        return view('product.create', compact(['last']))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -209,5 +207,16 @@ class ProductController extends Controller
         } else {
             return redirect()->route('product.index')->with(['error' => 'Remove Data Failed!']);
         }
+    }
+
+    public function paginate(Request $request)
+    {
+        $limit = 15;
+        $data = Product::query();
+        if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
+            $limit = $request->limit;
+        }
+        $result = $data->paginate($limit)->withQueryString();
+        return response()->json($result);
     }
 }

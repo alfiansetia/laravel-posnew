@@ -140,7 +140,7 @@
                                                                     <tr class="mb-1">
                                                                         <td style="width: 20%;"><b>Supplier</b></td>
                                                                         <td><a
-                                                                                href="{{ route('supplier.show', $data->supplier_id) }}">{{ $data->supplier->name }}</a>
+                                                                                href="{{ route('supplier.show', $data->supplier_id ?? '') }}">{{ $data->supplier->name ?? '-' }}</a>
                                                                         </td>
                                                                     </tr>
                                                                 </table>

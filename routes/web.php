@@ -45,12 +45,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/setting/password', [SettingController::class, 'passwordUpdate'])->name('setting.password.update');
 
     Route::resource('/user', UserController::class);
+    Route::get('/categories/paginate', [CategoryController::class, 'paginate'])->name('category.paginate');
     Route::resource('/category', CategoryController::class);
+
+    Route::get('/suppliers/paginate', [SupplierController::class, 'paginate'])->name('supplier.paginate');
     Route::resource('/supplier', SupplierController::class);
     Route::resource('/product', ProductController::class);
     Route::resource('/customer', CustomerController::class);
-    
+
     Route::resource('/sale', SaleController::class);
     Route::resource('/cart', CartController::class);
-
 });

@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +15,13 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::factory(50)->create();
+        $categories = Category::all();
+        $suppliers = Supplier::all();
+        for ($i = 0; $i < 50; $i++) {
+            Product::factory()->create([
+                'category_id' => $categories->random()->id,
+                'supplier_id' => $suppliers->random()->id,
+            ]);
+        }
     }
 }

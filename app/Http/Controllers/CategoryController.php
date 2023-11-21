@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class CategoryController extends Controller
 {
@@ -24,10 +25,13 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Category::all();
-        return view('category.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
+        if ($request->ajax()) {
+            $data = Category::query();
+            return DataTables::of($data)->setRowId('id')->toJson();
+        }
+        return view('category.index')->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -107,5 +111,14 @@ class CategoryController extends Controller
         } else {
             return redirect()->route('category.index')->with(['error' => 'Remove Data Failed!']);
         }
+    }
+
+    public function paginate(Request $request)
+    {
+        $limit = 15;
+        if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
+            $limit = $request->limit;
+        }
+        return response()->json(Category::paginate($limit)->withQueryString());
     }
 }

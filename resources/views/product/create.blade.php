@@ -71,15 +71,9 @@
                                         <label for="category" class="col-sm-3 col-form-label">Category</label>
                                         <div class="col-sm-9">
                                             <select name="category" id="category"
-                                                class="form-control select2 @error('category') is-invalid @enderror"
+                                                class="form-control @error('category') is-invalid @enderror"
                                                 style="width: 100%;" required>
                                                 <option value="">Select Category</option>
-                                                @foreach ($category as $item)
-                                                    <option {{ old('category') == $item->id ? 'selected' : '' }}
-                                                        value="{{ $item->id }}">
-                                                        {{ $item->name }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                             @error('category')
                                                 <div class="invalid-feedback">
@@ -92,15 +86,9 @@
                                         <label for="supplier" class="col-sm-3 col-form-label">Supplier</label>
                                         <div class="col-sm-9">
                                             <select name="supplier" id="supplier"
-                                                class="form-control select2 @error('supplier') is-invalid @enderror"
+                                                class="form-control @error('supplier') is-invalid @enderror"
                                                 style="width: 100%;" required>
                                                 <option value="">Select Supplier</option>
-                                                @foreach ($supplier as $item)
-                                                    <option {{ old('supplier') == $item->id ? 'selected' : '' }}
-                                                        value="{{ $item->id }}">
-                                                        {{ $item->name }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                             @error('supplier')
                                                 <div class="invalid-feedback">
@@ -410,9 +398,71 @@
 @push('js')
     <script>
         $('button[type=reset]').click(function() {
-            $('.select2').val('').change()
+            $('#category, #supplier').val('').change()
         })
 
         bsCustomFileInput.init();
+
+        $(document).ready(function() {
+            $("#category").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select a Category",
+                ajax: {
+                    delay: 1000,
+                    url: "{{ route('category.paginate') }}",
+                    data: function(params) {
+                        return {
+                            number: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: $.map(data.data, function(item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id,
+                                }
+                            }),
+                            pagination: {
+                                more: (params.page * data.per_page) < data.total,
+                            },
+                        };
+                    },
+                },
+                cache: true,
+            });
+
+            $("#supplier").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select a Supplier",
+                ajax: {
+                    delay: 1000,
+                    url: "{{ route('supplier.paginate') }}",
+                    data: function(params) {
+                        return {
+                            number: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: $.map(data.data, function(item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id,
+                                }
+                            }),
+                            pagination: {
+                                more: (params.page * data.per_page) < data.total,
+                            },
+                        };
+                    },
+                },
+                cache: true,
+            });
+        })
     </script>
 @endpush

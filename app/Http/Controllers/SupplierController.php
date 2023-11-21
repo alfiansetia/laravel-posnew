@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class SupplierController extends Controller
 {
@@ -24,10 +25,13 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Supplier::all();
-        return view('supplier.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
+        if ($request->ajax()) {
+            $data = Supplier::query();
+            return DataTables::of($data)->setRowId('id')->toJson();
+        }
+        return view('supplier.index')->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -115,5 +119,14 @@ class SupplierController extends Controller
         } else {
             return redirect()->route('supplier.index')->with(['error' => 'Remove Data Failed!']);
         }
+    }
+
+    public function paginate(Request $request)
+    {
+        $limit = 15;
+        if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
+            $limit = $request->limit;
+        }
+        return response()->json(Supplier::paginate($limit)->withQueryString());
     }
 }

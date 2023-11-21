@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class CustomerController extends Controller
 {
@@ -24,10 +25,13 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Customer::all();
-        return view('customer.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
+        if ($request->ajax()) {
+            $data = Customer::query();
+            return DataTables::of($data)->setRowId('id')->toJson();
+        }
+        return view('customer.index')->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**

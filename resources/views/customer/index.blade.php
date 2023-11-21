@@ -23,7 +23,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive ">
-                            <table class="table table-sm table-hover" id="table">
+                            <table class="table table-sm table-hover" id="table_serverside">
                                 <thead>
                                     <tr>
                                         <th style="width: 30px;">#</th>
@@ -35,32 +35,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $key => $item)
-                                        <tr>
-                                            <td>{{ $key + 1 }}</td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->phone }}</td>
-                                            <td>{{ $item->address }}</td>
-                                            <td class="text-center">
-                                                <div class="btn-group">
-                                                    <a href="{{ route('customer.show', $item->id) }}"
-                                                        class="btn btn-sm btn-info">
-                                                        <i class="fas fa-info-circle"></i>
-                                                    </a>
-                                                    <a href="{{ route('customer.edit', $item->id) }}"
-                                                        class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <button value="{{ $item->id }}" type="button"
-                                                        class="btn btn-sm btn-danger"
-                                                        onclick="deleteData('{{ route('customer.destroy', $item->id) }}')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -90,4 +64,60 @@
 @endpush
 
 @push('js')
+    <script>
+        $(document).ready(function() {
+            var table = $('#table_serverside').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('customer.index') }}",
+                columns: [{
+                        data: 'id',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            if (type === 'display') {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            } else {
+                                return data
+                            }
+                        }
+                    },
+                    {
+                        data: 'name',
+                    },
+                    {
+                        data: 'email',
+                    },
+                    {
+                        data: 'phone',
+                    }, {
+                        data: 'address',
+                    }, {
+                        data: 'id',
+                        orderable: false,
+                        searchable: false,
+                        className: "text-center",
+                        render: function(data, type, row, meta) {
+                            if (type === 'display') {
+                                return `<div class="btn-group">
+                                    <a href="{{ url('customer') }}/${data}" class="btn btn-sm btn-info"> <i class="fas fa-info-circle"></i></a>
+                                    <a href="{{ url('customer') }}/${data}/edit" class="btn btn-sm btn-warning"> <i class="fas fa-edit"></i></a>
+                                    <button value="${data}" type="button" class="btn btn-sm btn-danger btn_delete"> <i class="fas fa-trash"></i></button>
+                                </div>`
+                            } else {
+                                return data
+                            }
+                        }
+                    },
+                ]
+            });
+
+            table.on('click', '.btn_delete', function() {
+                let id = table.row($(this).closest('tr')).data().id;
+                deleteData("{{ url('customer') }}/" + id)
+            });
+
+        });
+    </script>
 @endpush

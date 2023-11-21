@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -25,10 +26,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = User::all();
-        return view('user.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
+        if ($request->ajax()) {
+            $data = User::query();
+            return DataTables::of($data)->setRowId('id')->toJson();
+        }
+        return view('user.index')->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -98,18 +102,17 @@ class UserController extends Controller
             'role'      => 'required|in:admin,user',
             'status'    => 'nullable|in:active',
         ]);
-        if ($request->filled('password')) {
-            $user->update([
-                'password'  => Hash::make($request->password),
-            ]);
-        }
-        $user = $user->update([
+        $param = [
             'name'      => $request->name,
             'email'     => $request->email,
             'phone'     => $request->phone,
             'role'      => $request->role,
             'status'    => $request->status ?? 'nonactive',
-        ]);
+        ];
+        if ($request->filled('password')) {
+            $param['password'] = Hash::make($request->password);
+        }
+        $user = $user->update($param);
         if ($user) {
             return redirect()->route('user.index')->with(['success' => 'Update Data Success!']);
         } else {
