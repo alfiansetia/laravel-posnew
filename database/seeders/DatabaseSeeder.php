@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $sale = Sale::Create([
-            'number' => 'SLS-0001',
+            'number' => 1,
             'date' => date('Y-m-d H:i:s'),
             'user_id' => 1,
             'customer_id' => 1,
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $sale2 = Sale::Create([
-            'number' => 'SLS-0002',
+            'number' =>  2,
             'date' => date('Y-m-d H:i:s'),
             'user_id' => 1,
             'customer_id' => 1,
@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $sale3 = Sale::Create([
-            'number' => 'SLS-0003',
+            'number' => 3,
             'date' => date('Y-m-d H:i:s'),
             'user_id' => 1,
             'customer_id' => 1,

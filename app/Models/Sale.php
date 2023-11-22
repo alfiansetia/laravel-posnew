@@ -16,6 +16,11 @@ class Sale extends Model
         return $this->hasMany(SaleDetail::class);
     }
 
+    public function getNumberAttribute($value)
+    {
+        return date('y', strtotime($this->date)) . date('m', strtotime($this->date)) . date('d', strtotime($this->date)) . str_pad($value, 4, 0, STR_PAD_LEFT);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

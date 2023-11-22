@@ -34,6 +34,12 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $data = Product::query()->with('category');
+            if ($request->filled('status')) {
+                $data->where('status', $request->status);
+            }
+            if ($request->filled('cat_id')) {
+                $data->where('category_id', $request->cat_id);
+            }
             return DataTables::of($data)->setRowId('id')->toJson();
         }
         return view('product.index')->with(['title' => $this->title, 'company' => $this->comp]);
@@ -61,7 +67,7 @@ class ProductController extends Controller
             'unit'      => 'required|max:10',
             'image'     => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'discount'  => 'required|integer|gte:0',
-            'stock'     => 'required|integer|gte:0',
+            // 'stock'     => 'required|integer|gte:0',
             'min_stock' => 'required|integer|gte:0',
             'selling_price'     => 'required|integer|gte:0',
             'purchase_price'    => 'required|integer|gte:0',
@@ -87,7 +93,7 @@ class ProductController extends Controller
             'unit'      => strtoupper($request->unit),
             'image'     => $image,
             'disc'      => $request->discount,
-            'stock'     => $request->stock,
+            // 'stock'     => $request->stock,
             'min_stock' => $request->min_stock,
             'sell_price'  => $request->selling_price,
             'purc_price'  => $request->purchase_price,
@@ -142,7 +148,7 @@ class ProductController extends Controller
             'unit'      => 'required|max:10',
             'image'     => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'discount'  => 'required|integer|gte:0',
-            'stock'     => 'required|integer|gte:0',
+            // 'stock'     => 'required|integer|gte:0',
             'min_stock' => 'required|integer|gte:0',
             'selling_price'     => 'required|integer|gte:0',
             'purchase_price'    => 'required|integer|gte:0',
@@ -173,7 +179,7 @@ class ProductController extends Controller
             'unit'      => strtoupper($request->unit),
             'image'     => $image,
             'disc'      => $request->discount,
-            'stock'     => $request->stock,
+            // 'stock'     => $request->stock,
             'min_stock' => $request->min_stock,
             'sell_price'  => $request->selling_price,
             'purc_price'  => $request->purchase_price,

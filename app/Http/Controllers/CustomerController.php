@@ -120,4 +120,21 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with(['error' => 'Remove Data Failed!']);
         }
     }
+
+    public function paginate(Request $request)
+    {
+        $limit = 15;
+        $data = Customer::query();
+        if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
+            $limit = $request->limit;
+        }
+        if ($request->filled('name')) {
+            $data->orWhere('name', 'like', "%$request->name%");
+        }
+        if ($request->filled('phone')) {
+            $data->orWhere('phone', 'like', "%$request->phone%");
+        }
+        $result = $data->paginate($limit)->withQueryString();
+        return response()->json($result);
+    }
 }

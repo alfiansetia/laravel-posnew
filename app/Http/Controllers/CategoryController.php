@@ -116,9 +116,14 @@ class CategoryController extends Controller
     public function paginate(Request $request)
     {
         $limit = 15;
+        $data = Category::query();
         if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
             $limit = $request->limit;
         }
-        return response()->json(Category::paginate($limit)->withQueryString());
+        if ($request->filled('name')) {
+            $data->orWhere('name', 'like', "%$request->name%");
+        }
+        $result = $data->paginate($limit)->withQueryString();
+        return response()->json($result);
     }
 }

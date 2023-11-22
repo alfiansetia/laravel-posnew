@@ -124,9 +124,17 @@ class SupplierController extends Controller
     public function paginate(Request $request)
     {
         $limit = 15;
+        $data = Supplier::query();
         if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
             $limit = $request->limit;
         }
-        return response()->json(Supplier::paginate($limit)->withQueryString());
+        if ($request->filled('name')) {
+            $data->orWhere('name', 'like', "%$request->name%");
+        }
+        if ($request->filled('phone')) {
+            $data->orWhere('phone', 'like', "%$request->phone%");
+        }
+        $result = $data->paginate($limit)->withQueryString();
+        return response()->json($result);
     }
 }

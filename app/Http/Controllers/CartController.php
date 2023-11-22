@@ -143,4 +143,14 @@ class CartController extends Controller
             return response()->json(['message' => 'Fail'], 422);
         }
     }
+
+    public function truncate()
+    {
+        $cart = Cart::where('user_id', auth()->id())->delete();
+        if ($cart) {
+            return redirect()->back()->with(['success' => 'Empty Cart Success!']);
+        } else {
+            return redirect()->back()->with(['error' => 'Empty Cart Failed!']);
+        }
+    }
 }

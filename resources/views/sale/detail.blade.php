@@ -46,7 +46,7 @@
                                         </tr>
                                         <tr class="mb-1">
                                             <td style="width: 20%;"><b>Customer</b></td>
-                                            <td>{{ $data->customer->name }}</td>
+                                            <td>{{ $data->customer->name }} {{ $data->customer->phone ?? '-' }}</td>
                                         </tr>
                                         <tr class="mb-1">
                                             <td style="width: 20%;"><b>Status</b></td>
@@ -171,7 +171,13 @@
                                                     <td>{{ $item->price }}</td>
                                                     <td>{{ $item->qty }}</td>
                                                     <td>{{ $item->disc }}</td>
-                                                    <td>{{ $item->price * $item->qty }}</td>
+                                                    @php
+                                                        $itemtotal = $item->price * $item->qty;
+                                                        $itemdisc = ($itemtotal * $item->disc) / 100;
+                                                        $itemtax = ($itemtotal * $data->tax) / 100;
+                                                    @endphp
+                                                    <td>{{ $itemtotal - $itemdisc }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>

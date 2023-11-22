@@ -8,7 +8,9 @@ use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
@@ -39,14 +41,8 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $date = Carbon::parse(date('Y-m-d H:i:s'));
-        $sale =  Sale::whereYear('date', $date->year)
-            ->whereMonth('date', $date->month)
-            ->orderByDesc('number')
-            ->first();
-        dd($sale);
-        $customer = Customer::all();
-        return view('sale.create', compact('customer'))->with(['title' => $this->title, 'company' => $this->comp]);
+        $last = Sale::latest('id')->first();
+        return view('sale.create', compact('last'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -61,41 +57,59 @@ class SaleController extends Controller
             'bill'      => 'required|integer|gte:0',
         ]);
 
-        $count = Sale::whereYear('date', now()->year())
-            ->whereMonth('date', now()->month())
-            ->orderByDesc('number')
-            ->first();
-        $counti = 1;
-        if ($count) {
-            $counti = ($count->getRawOriginal('number') ?? 0) + 1;
-        }
-
         $cart = Cart::where('user_id', auth()->id())->get();
         if (count($cart ?? []) > 0) {
-            $last = Sale::latest('id')->first() ?? (0 + 1);
-            $sale = Sale::create([
-                'number'        => $counti,
-                'customer_id'   => $request->customer,
-                'desc'          => $request->desc,
-                'tax'           => $request->tax,
-                'bill'          => $request->bill,
-            ]);
-            foreach ($cart as $item) {
-                SaleDetail::create([
-                    'sale_id'       => $sale->id,
-                    'product_id'    => $item->product_id,
-                    'price'         => $item->product->sell_price,
-                    'disc'          => $item->product->disc,
-                    'qty'           => $item->qty,
-                ]);
-                $item->delete();
-            }
+            try {
+                DB::beginTransaction();
+                $currentDate = Carbon::now();
+                $count = Sale::whereYear('date', $currentDate->year)
+                    ->whereMonth('date', $currentDate->month)
+                    ->orderByDesc('number')
+                    ->first();
+                $counti = 1;
+                if ($count) {
+                    $counti = ($count->getRawOriginal('number') ?? 0) + 1;
+                }
+                $total = 0;
+                foreach ($cart as $item) {
+                    $price = $item->qty * $item->product->sell_price;
+                    $disc = $price * $item->product->disc / 100;
+                    $subtotal = $price - $disc;
+                    $total = $total + $subtotal;
+                }
+                $tax = $total * $request->tax / 100;
+                $totalIncludingTax = $total + $tax;
 
-            if ($cart) {
-                return redirect()->route('sale.index')->with(['success' => 'Add Data Success']);
-            } else {
-                return redirect()->route('sale.index')->with(['error' => 'Add Data Failed!']);
+                $sale = Sale::create([
+                    'number'        => $counti,
+                    'customer_id'   => $request->customer,
+                    'user_id'       => auth()->id(),
+                    'desc'          => $request->desc,
+                    'tax'           => $request->tax,
+                    'bill'          => $request->bill,
+                    'total'         => $totalIncludingTax,
+                    'status'        => $request->bill >= $totalIncludingTax ? 'paid' : 'unpaid',
+                ]);
+                foreach ($cart as $item) {
+                    SaleDetail::create([
+                        'sale_id'       => $sale->id,
+                        'product_id'    => $item->product_id,
+                        'price'         => $item->product->sell_price,
+                        'disc'          => $item->product->disc,
+                        'qty'           => $item->qty,
+                    ]);
+                    $final_stock = $item->product->stock - $item->qty;
+                    $item->product->update(['stock' => $final_stock]);
+                    $item->delete();
+                }
+                DB::commit();
+                return redirect()->route('sale.create')->with(['success' => 'Add Data Success']);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return redirect()->route('sale.create')->with(['error' => 'Add Data Failed! ' . $e->getMessage()]);
             }
+        } else {
+            return redirect()->back()->with(['error' => 'Cart Empty!']);
         }
     }
 
@@ -128,13 +142,27 @@ class SaleController extends Controller
      */
     public function destroy(Sale $sale)
     {
-        $sale = $sale->update([
-            'status' => 'cancel',
-        ]);
-        if ($sale) {
+        try {
+            DB::beginTransaction();
+            $products = $sale->sale_detail ?? [];
+            if (count($products) > 0) {
+                foreach ($products as $item) {
+                    $product = $item->product;
+                    if ($product) {
+                        $product->update([
+                            'stock' => $product->stock + $item->qty,
+                        ]);
+                    }
+                }
+            }
+            $sale = $sale->update([
+                'status' => 'cancel',
+            ]);
+            DB::commit();
             return redirect()->route('sale.index')->with(['success' => 'Cancel Data Success']);
-        } else {
-            return redirect()->route('sale.index')->with(['error' => 'Cancel Data Failed!']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('sale.index')->with(['error' => 'Cancel Data Failed! ' . $e->getMessage()]);
         }
     }
 }

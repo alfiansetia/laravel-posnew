@@ -203,7 +203,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    {{-- <div class="form-group row">
                                         <label for="stock" class="col-sm-3 col-form-label">Stock</label>
                                         <div class="col-sm-9">
                                             <input type="number" name="stock"
@@ -216,7 +216,7 @@
                                                 </div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group row">
                                         <label for="min_stock" class="col-sm-3 col-form-label">Min Stock</label>
                                         <div class="col-sm-9">
@@ -442,7 +442,8 @@
                     url: "{{ route('supplier.paginate') }}",
                     data: function(params) {
                         return {
-                            number: params.term,
+                            name: params.term,
+                            phone: params.term,
                             page: params.page || 1
                         };
                     },
@@ -451,7 +452,7 @@
                         return {
                             results: $.map(data.data, function(item) {
                                 return {
-                                    text: item.name,
+                                    text: item.name + ' ' + (item.phone ?? ''),
                                     id: item.id,
                                 }
                             }),

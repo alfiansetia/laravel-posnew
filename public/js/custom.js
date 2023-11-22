@@ -47,3 +47,7 @@ function block() {
         }
     });
 }
+
+function harga(x) {
+    return parseInt(x).toLocaleString('id-ID')
+}
