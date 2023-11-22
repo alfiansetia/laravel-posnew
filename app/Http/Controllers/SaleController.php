@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Company;
-use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use Carbon\Carbon;
@@ -59,8 +58,8 @@ class SaleController extends Controller
 
         $cart = Cart::where('user_id', auth()->id())->get();
         if (count($cart ?? []) > 0) {
+            DB::beginTransaction();
             try {
-                DB::beginTransaction();
                 $currentDate = Carbon::now();
                 $count = Sale::whereYear('date', $currentDate->year)
                     ->whereMonth('date', $currentDate->month)
@@ -81,6 +80,7 @@ class SaleController extends Controller
                 $totalIncludingTax = $total + $tax;
 
                 $sale = Sale::create([
+                    'date'          => date('Y-m-d H:i:s'),
                     'number'        => $counti,
                     'customer_id'   => $request->customer,
                     'user_id'       => auth()->id(),
@@ -142,8 +142,11 @@ class SaleController extends Controller
      */
     public function destroy(Sale $sale)
     {
+        if ($sale->status === 'cancel') {
+            return redirect()->route('sale.index')->with(['error' => 'Cancel Data Failed! Data already canceled!']);
+        }
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $products = $sale->sale_detail ?? [];
             if (count($products) > 0) {
                 foreach ($products as $item) {

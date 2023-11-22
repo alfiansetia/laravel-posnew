@@ -9,7 +9,6 @@
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -17,21 +16,22 @@
                             <h3 class="card-title">Data {{ $title }}</h3>
 
                             <div class="card-tools">
-                                <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary mr-2"><i
+                                <a href="{{ route('adjustment.create') }}" class="btn btn-sm btn-primary mr-2"><i
                                         class="fas fa-plus mr-1"></i> Add</a>
                             </div>
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body table-responsive ">
+                        <div class="card-body table-responsive">
                             <table class="table table-sm table-hover" id="table_serverside" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 30px;">#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th class="text-center">Role</th>
+                                        <th>Number</th>
+                                        <th>Date</th>
+                                        <th>Product</th>
+                                        <th class="text-center">Type [Value]</th>
                                         <th class="text-center">Status</th>
+                                        <th>Desc</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -71,7 +71,7 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: "{{ route('user.index') }}",
+                ajax: "{{ route('adjustment.index') }}",
                 columns: [{
                         data: 'id',
                         orderable: false,
@@ -86,33 +86,41 @@
                         }
                     },
                     {
-                        data: 'name',
+                        data: 'number',
                     },
                     {
-                        data: 'email',
+                        data: 'date',
                     },
                     {
-                        data: 'phone',
-                    }, {
-                        data: 'role',
+                        data: 'product.name',
+                        defaultContent: '',
+                    },
+                    {
+                        data: 'type',
+                        orderable: false,
+                        searchable: false,
                         className: "text-center",
                         render: function(data, type, row, meta) {
                             if (type === 'display') {
-                                return `<span class="badge badge-${data == 'admin' ? 'info' : 'warning' }">${data}</span>`
+                                return `${data} [${row.value}]`
                             } else {
                                 return data
                             }
                         }
-                    }, {
+                    },
+                    {
                         data: 'status',
                         className: "text-center",
                         render: function(data, type, row, meta) {
                             if (type === 'display') {
-                                return `<span class="badge badge-${data == 'active' ? 'success' : 'danger' }">${data}</span>`
+                                return `<span class="badge badge-${ data === 'done' ? 'success' : 'danger' }">${ data }</span>`
                             } else {
                                 return data
                             }
                         }
+                    },
+                    {
+                        data: 'desc',
                     },
                     {
                         data: 'id',
@@ -121,11 +129,16 @@
                         className: "text-center",
                         render: function(data, type, row, meta) {
                             if (type === 'display') {
-                                return `<div class="btn-group">
-                                            <a href="{{ url('user') }}/${data}" class="btn btn-sm btn-info"> <i class="fas fa-info-circle"></i></a>
-                                            <a href="{{ url('user') }}/${data}/edit" class="btn btn-sm btn-warning"> <i class="fas fa-edit"></i></a>
-                                            <button value="${data}" type="button" class="btn btn-sm btn-danger btn_delete"> <i class="fas fa-trash"></i></button>
-                                        </div>`
+                                let text =
+                                    `<div class="btn-group">
+                                    <a href="{{ url('adjustment') }}/${data}" class="btn btn-sm btn-info"> <i class="fas fa-info-circle"></i></a>
+                                    <a href="{{ url('adjustment') }}/${data}/edit" class="btn btn-sm btn-warning"> <i class="fas fa-edit"></i></a>`;
+                                if (row.status != 'cancel') {
+                                    text +=
+                                        `<button value="${data}" type="button" class="btn btn-sm btn-danger btn_delete"> <i class="fas fa-trash"></i></button>`
+                                }
+                                text += `</div>`
+                                return text
                             } else {
                                 return data
                             }
@@ -136,7 +149,7 @@
 
             table.on('click', '.btn_delete', function() {
                 let id = table.row($(this).closest('tr')).data().id;
-                deleteData("{{ url('user') }}/" + id)
+                deleteData("{{ url('adjustment') }}/" + id)
             });
 
         });

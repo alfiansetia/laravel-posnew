@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -52,12 +53,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/suppliers/paginate', [SupplierController::class, 'paginate'])->name('supplier.paginate');
     Route::resource('/supplier', SupplierController::class);
 
+    Route::get('/products/paginate', [ProductController::class, 'paginate'])->name('product.paginate');
     Route::resource('/product', ProductController::class);
 
     Route::get('/customers/paginate', [CustomerController::class, 'paginate'])->name('customer.paginate');
     Route::resource('/customer', CustomerController::class);
 
     Route::resource('/sale', SaleController::class);
+    Route::resource('/adjustment', AdjustmentController::class);
 
     Route::delete('/carts/truncate', [CartController::class, 'truncate'])->name('cart.truncate');
     Route::resource('/cart', CartController::class);

@@ -222,6 +222,9 @@ class ProductController extends Controller
         if ($request->filled('limit') && is_numeric($request->limit) && $request->limit > 0) {
             $limit = $request->limit;
         }
+        if ($request->filled('name')) {
+            $data->orWhere('name', 'like', "%$request->name%");
+        }
         $result = $data->paginate($limit)->withQueryString();
         return response()->json($result);
     }

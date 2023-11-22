@@ -23,10 +23,10 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive ">
-                            <table class="table table-sm table-hover" id="table_serverside">
+                            <table class="table table-sm table-hover" id="table_serverside" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th style="width: 30px;">#</th>
+                                        <th class="text-center" style="width: 30px;">#</th>
                                         <th>Name</th>
                                         <th>Desc</th>
                                         <th class="text-center">Action</th>
@@ -73,6 +73,7 @@
                         data: 'id',
                         orderable: false,
                         searchable: false,
+                        className: "text-center",
                         render: function(data, type, row, meta) {
                             if (type === 'display') {
                                 return meta.row + meta.settings._iDisplayStart + 1;

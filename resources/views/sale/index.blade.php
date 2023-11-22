@@ -23,10 +23,10 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive ">
-                            <table class="table table-sm table-hover" id="table">
+                            <table class="table table-sm table-hover" id="table" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th style="width: 30px;">#</th>
+                                        <th class="text-center" style="width: 30px;">#</th>
                                         <th>Number</th>
                                         <th>Date</th>
                                         <th>Customer</th>

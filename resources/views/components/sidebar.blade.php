@@ -71,8 +71,9 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item {{ $title == 'Sale' ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ $title == 'Sale' ? 'active' : '' }}">
+                <li class="nav-item {{ $title == 'Sale' || $title == 'Adjustment' ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ $title == 'Sale' || $title == 'Adjustment' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-chart-bar"></i>
                         <p>
                             Transaction
@@ -85,6 +86,13 @@
                                 class="nav-link {{ $title == 'Sale' ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Sale</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('adjustment.index') }}"
+                                class="nav-link {{ $title == 'Adjustment' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Adjustment</p>
                             </a>
                         </li>
                     </ul>

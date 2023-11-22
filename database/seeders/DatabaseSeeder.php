@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             SupplierSeeder::class,
             ProductSeeder::class,
             CustomerSeeder::class,
+            AdjustmentSeeder::class,
         ]);
 
         $sale = Sale::Create([

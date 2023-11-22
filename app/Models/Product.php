@@ -10,6 +10,10 @@ class Product extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $casts = [
+        'stock' => 'integer',
+    ];
+
     public function getImageAttribute($value)
     {
         if ($value) {
