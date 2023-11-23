@@ -33,7 +33,7 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Sale::query();
+            $data = Sale::query()->latest('date');
             return DataTables::of($data)->setRowId('id')->toJson();
         }
         return view('sale.index')->with(['title' => $this->title, 'company' => $this->comp]);

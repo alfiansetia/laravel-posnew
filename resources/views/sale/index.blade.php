@@ -99,9 +99,18 @@
                     },
                     {
                         data: 'tax',
+                        className: "text-center",
+                        render: function(data, type, row, meta) {
+                            if (type === 'display') {
+                                return `${data}%`
+                            } else {
+                                return data
+                            }
+                        }
                     },
                     {
                         data: 'total',
+                        className: "text-center",
                         render: function(data, type, row, meta) {
                             if (type === 'display') {
                                 return harga(data)

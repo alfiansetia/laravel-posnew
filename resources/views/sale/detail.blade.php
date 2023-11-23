@@ -92,24 +92,12 @@
                             </div>
 
                             <div class="text-center mt-3 mb-2">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-info">
-                                        <i class="fas fa-retweet mr-1"></i>Set Status
+                                @if ($data->status != 'cancel')
+                                    <button type="button" onclick="deleteData('{{ route('sale.destroy', $data->id) }}')"
+                                        class="btn btn-danger">
+                                        <i class="fas fa-trash mr-1"></i>Cancel
                                     </button>
-                                    <button type="button" class="btn btn-info dropdown-toggle dropdown-icon"
-                                        data-toggle="dropdown">
-                                    </button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <button class="dropdown-item">
-                                            <i class="fas fa-dollar-sign mr-1"></i>Paid
-                                        </button>
-                                        <div class="dropdown-divider"></div>
-                                        <button class="dropdown-item">
-                                            <i class="fas fa-times mr-1"></i>Cancel
-                                        </button>
-                                    </div>
-                                </div>
-
+                                @endif
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fas fa-print mr-1"></i>Print
@@ -154,8 +142,7 @@
                             <h3 class="card-title">Detail {{ $title }} </h3>
 
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                    title="Collapse">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
                                 <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
@@ -166,7 +153,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 col-md-12 order-3 order-md-3">
-                                    <table id="table" class="table table-sm">
+                                    <table id="table" class="table table-sm" style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <th style="width: 30px;">#</th>
@@ -208,6 +195,11 @@
 
     </div>
     <!-- /.content -->
+
+    <form action="{{ route('sale.destroy', $data->id) }}" method="POST" id="form_delete">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
 
 @push('jslib')
