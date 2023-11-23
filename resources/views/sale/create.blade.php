@@ -17,9 +17,9 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="card">
+                        <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title">Detail {{ $title }} </h3>
+                                <h3 class="card-title">Create {{ $title }} </h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse"
                                         title="Collapse">
@@ -62,7 +62,6 @@
                                 <div class="text-center mt-5 mb-2">
                                     <div class="form-group">
                                         <div class="ml-auto mr-auto">
-
                                             <button type="button" id="btn_truncate" class="btn btn-danger mr-2">
                                                 <i class="fas fa-trash mr-1"></i>Reset Cart
                                             </button>
@@ -85,7 +84,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <div class="card">
+                        <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <h3 class="card-title">Detail {{ $title }} </h3>
 
@@ -101,9 +100,28 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group row">
+                                    <label for="type" class="col-sm-3 col-form-label">Payment</label>
+                                    <div class="col-sm-9">
+                                        <select name="type" id="type"
+                                            class="form-control select2 @error('type') is-invalid @enderror"
+                                            style="width: 100%;" required>
+                                            <option value="cash" {{ old('type') == 'cash' ? 'selected' : '' }}>CASH
+                                            </option>
+                                            <option value="cashless" {{ old('type') == 'cashless' ? 'selected' : '' }}>
+                                                CASHLESS
+                                            </option>
+                                        </select>
+                                        @error('type')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label for="tax" class="col-sm-3 col-form-label">TAX</label>
                                     <div class="col-sm-9">
-                                        <div class="input-group">
+                                        <div class="input-group show-error">
                                             <input type="number" name="tax"
                                                 class="form-control @error('tax') is-invalid @enderror" id="tax"
                                                 placeholder="tax" value="{{ old('tax', $company->tax) }}" min="0"
@@ -122,18 +140,31 @@
                                 <div class="form-group row">
                                     <label for="bill" class="col-sm-3 col-form-label">Bill</label>
                                     <div class="col-sm-9">
-                                        <div class="input-group">
-                                            <input type="number" name="bill"
-                                                class="form-control @error('bill') is-invalid @enderror" id="bill"
-                                                placeholder="Bill" value="{{ old('bill', 0) }}" maxlength="50">
+                                        <div class="input-group show-error">
+                                            <input type="hidden" name="bill" id="bill_value">
+                                            <input type="text"
+                                                class="form-control mask-angka @error('bill') is-invalid @enderror"
+                                                id="bill" placeholder="Bill" value="{{ old('bill', 0) }}" required>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <input type="checkbox" id="check_bill">
                                                 </span>
                                             </div>
+                                            @error('bill')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
-
-                                        @error('bill')
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="trx_id" class="col-sm-3 col-form-label">TRX ID</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="trx_id"
+                                            class="form-control @error('trx_id') is-invalid @enderror" id="trx_id"
+                                            placeholder="TRX ID" value="{{ old('trx_id') }}" maxlength="50">
+                                        @error('trx_id')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -143,16 +174,28 @@
                             </div>
                             <!-- /.card-body -->
                         </div>
+                    </div>
 
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="callout callout-success">
+                                    {{-- <p>This is a green callout.</p> --}}
+                                    <h1 id="total_price"></h1>
+                                </div>
+                            </div>
+                            <div class="col-6">
 
-                        <div class="callout callout-success">
-                            {{-- <p>This is a green callout.</p> --}}
-                            <h1 id="total_price"></h1>
+                                <div class="callout callout-danger">
+                                    {{-- <p>This is a green callout.</p> --}}
+                                    <h1 id="return_price"></h1>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <div class="card">
+                        <div class="card card-success card-outline">
                             <div class="card-header">
                                 <h3 class="card-title" id="total_item">0 Item 0 Qty</h3>
 
@@ -176,6 +219,7 @@
                                                     <th>Product Name</th>
                                                     <th>Price</th>
                                                     <th>Qty</th>
+                                                    <th>Unit</th>
                                                     <th>Disc</th>
                                                     <th>Subtotal</th>
                                                     <th style="width: 30px;">#</th>
@@ -207,6 +251,9 @@
 @endsection
 
 @push('jslib')
+    <!-- InputMask -->
+    <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -262,6 +309,24 @@
                 cache: true,
             });
 
+            $("#trx_id").prop('readonly', true);
+
+            $("#type").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select a Payment",
+            })
+
+            $("#type").change(function() {
+                let type = $("#type").val()
+                if (type == 'cash') {
+                    $("#trx_id").prop('required', false);
+                    $("#trx_id").prop('readonly', true);
+                } else {
+                    $("#trx_id").prop('required', true);
+                    $("#trx_id").prop('readonly', false);
+                }
+            })
+
             $("#category_product").select2({
                 theme: 'bootstrap4',
                 placeholder: "Select a Category",
@@ -307,11 +372,16 @@
                 table_cart.ajax.reload()
             })
 
+            $('#bill').change(function() {
+                table_cart.ajax.reload()
+            })
+
             $('#form').validate({
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
                     element.closest('.col-sm-9').append(error);
+                    element.closest('.show-error').append(error);
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');
@@ -324,6 +394,15 @@
                     block()
                     form.submit();
                 }
+            });
+
+            $('.mask-angka').inputmask({
+                alias: 'numeric',
+                groupSeparator: '.',
+                autoGroup: true,
+                digits: 0,
+                rightAlign: false,
+                removeMaskOnSubmit: true,
             });
         })
 
@@ -403,10 +482,24 @@
                 }
             }, {
                 title: 'Name',
-                data: 'product.name',
+                data: 'product',
+                render: function(data, type, row, meta) {
+                    if (type == 'display') {
+                        return `[${data.code}] ${data.name}`;
+                    } else {
+                        return data
+                    }
+                }
             }, {
                 title: 'Price',
                 data: 'product.sell_price',
+                render: function(data, type, row, meta) {
+                    if (type == 'display') {
+                        return harga(data)
+                    } else {
+                        return data
+                    }
+                }
             }, {
                 title: 'Qty',
                 data: 'qty',
@@ -426,6 +519,10 @@
                     }
                 }
             }, {
+                title: 'Unit',
+                data: 'product.unit',
+                className: "text-center",
+            }, {
                 title: 'Disc',
                 data: 'product.disc',
                 render: function(data, type, row, meta) {
@@ -441,7 +538,7 @@
                 render: function(data, type, row, meta) {
                     let text = (data * row.qty) - (data * row.qty * row.product.disc / 100)
                     if (type == 'display') {
-                        return text
+                        return harga(text)
                     } else {
                         return data
                     }
@@ -459,10 +556,17 @@
                 });
                 total += total * (tax / 100);
                 grand = total;
-                $('#total_price').text('Rp. ' + harga(total))
                 $('#total_item').text(data.length + ' Item, ' + qty + ' Qty')
                 $('#tax').val(tax)
-                $('#check_bill').prop('checked') ? $('#bill').val(grand) : $('#bill').val(0)
+                $('#bill').prop('readonly', false)
+                if ($('#check_bill').prop('checked')) {
+                    $('#bill').val(grand)
+                    $('#bill').prop('readonly', true)
+                }
+                $('#total_price').text('TOTAL : Rp. ' + harga(grand))
+                let bill = $('#bill').inputmask('unmaskedvalue') || 0
+                $('#bill_value').val(bill)
+                $('#return_price').text('RETURN : Rp. ' + harga((bill - grand)))
             },
         });
 

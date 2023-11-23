@@ -1,5 +1,11 @@
 @extends('layouts.template')
 
+@push('csslib')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+@endpush
+
 @section('content')
     <!-- Main content -->
     <div class="content">
@@ -10,27 +16,25 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Edit {{ $title }}</h3>
-
                             <div class="card-tools">
-                                <a href="{{ route('customer.index') }}" class="btn btn-sm btn-primary mr-2"><i
+                                <a href="{{ route('sale.index') }}" class="btn btn-sm btn-primary mr-2"><i
                                         class="fas fa-arrow-left mr-1"></i> Back</a>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <form id="form" class="form-horizontal" method="POST"
-                                action="{{ route('customer.update', $data->id) }}">
+                                action="{{ route('sale.update', $data->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                        <label for="number" class="col-sm-2 col-form-label">Sale Number</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="name"
-                                                class="form-control @error('name') is-invalid @enderror" id="name"
-                                                placeholder="Name" value="{{ $data->name }}" maxlength="50" required
-                                                autofocus>
-                                            @error('name')
+                                            <input type="text" class="form-control @error('number') is-invalid @enderror"
+                                                id="number" placeholder="Sale Number" value="{{ $data->number }}"
+                                                disabled readonly>
+                                            @error('number')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
@@ -38,12 +42,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                                        <label for="date" class="col-sm-2 col-form-label">Date</label>
                                         <div class="col-sm-10">
-                                            <input type="email" name="email"
-                                                class="form-control @error('email') is-invalid @enderror" id="email"
-                                                placeholder="Email" value="{{ $data->email }}" maxlength="50" required>
-                                            @error('email')
+                                            <input type="text" class="form-control @error('date') is-invalid @enderror"
+                                                id="date" placeholder="Date" value="{{ $data->date }}" disabled
+                                                readonly>
+                                            @error('date')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
@@ -51,14 +55,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="phone" class="col-sm-2 col-form-label">Phone</label>
+                                        <label for="tax" class="col-sm-2 col-form-label">TAX %</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="phone"
-                                                class="form-control @error('phone') is-invalid @enderror" id="phone"
-                                                placeholder="Phone" value="{{ $data->phone }}" maxlength="50"
-                                                data-inputmask="'mask': ['999999999999', '99999999999[9]']" data-mask
-                                                required>
-                                            @error('phone')
+                                            <input type="text" class="form-control @error('tax') is-invalid @enderror"
+                                                id="tax" placeholder="TAX" value="{{ $data->tax }}" disabled
+                                                readonly>
+                                            @error('tax')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
@@ -66,11 +68,56 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="address" class="col-sm-2 col-form-label">Address</label>
+                                        <label for="total" class="col-sm-2 col-form-label">Total</label>
                                         <div class="col-sm-10">
-                                            <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror"
-                                                placeholder="Address" maxlength="100">{{ $data->address }}</textarea>
-                                            @error('address')
+                                            <input type="text" class="form-control @error('total') is-invalid @enderror"
+                                                id="total" placeholder="Total" value="{{ harga($data->total) }}"
+                                                disabled readonly>
+                                            @error('total')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="type" class="col-sm-2 col-form-label">Payment</label>
+                                        <div class="col-sm-10">
+                                            <select name="type" id="type"
+                                                class="form-control @error('type') is-invalid @enderror"
+                                                style="width: 100%;" required>
+                                                <option value="cash" {{ $data->type == 'cash' ? 'selected' : '' }}>CASH
+                                                </option>
+                                                <option value="cashless" {{ $data->type == 'cashless' ? 'selected' : '' }}>
+                                                    CASHLESS
+                                                </option>
+                                            </select>
+                                            @error('type')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="trx_id" class="col-sm-2 col-form-label">TRX ID</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" name="trx_id"
+                                                class="form-control @error('trx_id') is-invalid @enderror" id="trx_id"
+                                                placeholder="TRX ID" value="{{ $data->trx_id }}" maxlength="50">
+                                            @error('trx_id')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="desc" class="col-sm-2 col-form-label">Description</label>
+                                        <div class="col-sm-10">
+                                            <textarea name="desc" id="desc" class="form-control @error('desc') is-invalid @enderror"
+                                                placeholder="Description" maxlength="100" autofocus>{{ $data->desc }}</textarea>
+                                            @error('desc')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
@@ -103,11 +150,41 @@
     <!-- jquery-validation -->
     <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- InputMask -->
-    <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
 
     <script src="{{ asset('js/custom_crud.js') }}"></script>
 @endpush
 
 @push('js')
+    <script>
+        $(document).ready(function() {
+            change_trx()
+
+
+            $('button[type=reset]').click(function() {
+                $('#type').val("{{ $data->type }}").change()
+            })
+
+            $("#type").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select a Payment",
+            })
+
+            $('#type').change(function() {
+                change_trx()
+            })
+
+            function change_trx() {
+                let type = $("#type").val()
+                if (type == 'cash') {
+                    $("#trx_id").prop('required', false);
+                    $("#trx_id").prop('readonly', true);
+                } else {
+                    $("#trx_id").prop('required', true);
+                    $("#trx_id").prop('readonly', false);
+                }
+            }
+        })
+    </script>
 @endpush

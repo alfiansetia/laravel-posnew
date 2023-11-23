@@ -157,7 +157,7 @@ class AdjustmentController extends Controller
             if ($adjustment->product) {
                 $current_value = $adjustment->product->stock;
                 $new_value = $current_value + $adjustment->value;
-                if ($adjustment->type === 'minus') {
+                if ($adjustment->type === 'plus') {
                     if ($current_value < $adjustment->value) {
                         throw new Exception("Stock cannot minus!");
                     }

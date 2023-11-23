@@ -398,7 +398,8 @@
 @push('js')
     <script>
         $('button[type=reset]').click(function() {
-            $('#category, #supplier').val('').change()
+            $('#category').val('').change()
+            $('#supplier').val('').change()
         })
 
         bsCustomFileInput.init();

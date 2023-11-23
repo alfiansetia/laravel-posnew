@@ -20,7 +20,9 @@ return new class extends Migration
             $table->integer('tax')->default(0);
             $table->integer('total')->default(0);
             $table->integer('bill')->default(0);
-            $table->enum('status', ['paid', 'unpaid', 'cancel'])->default('unpaid');
+            $table->enum('status', ['done', 'cancel'])->default('done');
+            $table->enum('type', ['cash', 'cashless'])->default('cash');
+            $table->string('trx_id')->nullable();
             $table->string('desc')->nullable();
             $table->timestamps();
             $table->foreign('customer_id')->references('id')->on('customers')->cascadeOnUpdate()->nullOnDelete();

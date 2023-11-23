@@ -9,8 +9,9 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Detail {{ $title }} <a
-                                    href="{{ route('adjustment.edit', $data->id) }}"><i class="fas fa-edit ml-1"></i></a></h3>
+                            <h3 class="card-title">Detail {{ $title }} <span
+                                    class="badge badge-{{ $data->status === 'cancel' ? 'danger' : 'success' }}">{{ $data->status }}</span>
+                                <a href="{{ route('adjustment.edit', $data->id) }}"><i class="fas fa-edit ml-1"></i></a></h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">

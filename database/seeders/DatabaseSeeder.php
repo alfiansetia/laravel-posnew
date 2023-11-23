@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'tax' => 0,
             'total' => 50000,
             'bill' => 50000,
-            'status' => 'unpaid',
+            'status' => 'done',
             'desc' => 'Pembelian ke 1',
         ]);
 
@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
             'tax' => 0,
             'total' => 50000,
             'bill' => 50000,
-            'status' => 'paid',
+            'status' => 'cancel',
             'desc' => 'Pembelian ke 2',
         ]);
 
@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
             'tax' => 0,
             'total' => 50000,
             'bill' => 50000,
-            'status' => 'cancel',
+            'status' => 'done',
             'desc' => 'Pembelian ke 3',
         ]);
 

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class SaleController extends Controller
 {
@@ -29,10 +30,13 @@ class SaleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Sale::all();
-        return view('sale.index', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
+        if ($request->ajax()) {
+            $data = Sale::query();
+            return DataTables::of($data)->setRowId('id')->toJson();
+        }
+        return view('sale.index')->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -54,6 +58,8 @@ class SaleController extends Controller
             'desc'      => 'nullable|max:100',
             'tax'       => 'required|integer|gte:0|lte:100',
             'bill'      => 'required|integer|gte:0',
+            'type'      => 'required|in:cash,cashless',
+            'trx_id'    => 'required_if:type,cashless',
         ]);
 
         $cart = Cart::where('user_id', auth()->id())->get();
@@ -88,7 +94,8 @@ class SaleController extends Controller
                     'tax'           => $request->tax,
                     'bill'          => $request->bill,
                     'total'         => $totalIncludingTax,
-                    'status'        => $request->bill >= $totalIncludingTax ? 'paid' : 'unpaid',
+                    'status'        => 'done',
+                    'trx_id'        => $request->trx_id,
                 ]);
                 foreach ($cart as $item) {
                     SaleDetail::create([
@@ -96,6 +103,7 @@ class SaleController extends Controller
                         'product_id'    => $item->product_id,
                         'price'         => $item->product->sell_price,
                         'disc'          => $item->product->disc,
+                        'unit'          => $item->product->unit,
                         'qty'           => $item->qty,
                     ]);
                     $final_stock = $item->product->stock - $item->qty;
@@ -127,6 +135,8 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
+        $data = $sale->load('sale_detail');
+        return view('sale.edit', compact('data'))->with(['title' => $this->title, 'company' => $this->comp]);
     }
 
     /**
@@ -134,7 +144,21 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        //
+        $this->validate($request, [
+            'desc'      => 'nullable|max:100',
+            'type'      => 'required|in:cash,cashless',
+            'trx_id'    => 'required_if:type,cashless',
+        ]);
+        $sale = $sale->update([
+            'desc'      => $request->desc,
+            'type'      => $request->type,
+            'trx_id'    => $request->trx_id,
+        ]);
+        if ($sale) {
+            return redirect()->route('sale.index')->with(['success' => 'Update Data Success']);
+        } else {
+            return redirect()->route('sale.index')->with(['error' => 'Update Data Failed!']);
+        }
     }
 
     /**

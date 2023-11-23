@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('price')->default(0);
             $table->integer('qty')->default(0);
             $table->integer('disc')->default(0);
+            $table->string('unit')->default('PCS');
             $table->timestamps();
             $table->foreign('sale_id')->references('id')->on('sales')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreign('product_id')->references('id')->on('products')->cascadeOnUpdate()->nullOnDelete();
