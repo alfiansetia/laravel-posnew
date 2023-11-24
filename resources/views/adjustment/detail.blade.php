@@ -11,7 +11,8 @@
                         <div class="card-header">
                             <h3 class="card-title">Detail {{ $title }} <span
                                     class="badge badge-{{ $data->status === 'cancel' ? 'danger' : 'success' }}">{{ $data->status }}</span>
-                                <a href="{{ route('adjustment.edit', $data->id) }}"><i class="fas fa-edit ml-1"></i></a></h3>
+                                <a href="{{ route('adjustment.edit', $data->id) }}"><i class="fas fa-edit ml-1"></i></a>
+                            </h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -77,6 +78,13 @@
                                 <a href="{{ route('adjustment.index') }}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left mr-1"></i>Back
                                 </a>
+                                @if ($data->status != 'cancel')
+                                    <button type="button"
+                                        onclick="deleteData('{{ route('adjustment.destroy', $data->id) }}')"
+                                        class="btn btn-danger">
+                                        <i class="fas fa-trash mr-1"></i>Cancel
+                                    </button>
+                                @endif
                                 <a href="{{ route('adjustment.create') }}" class="btn btn-primary">
                                     <i class="fas fa-plus mr-1"></i>Add Data
                                 </a>
@@ -90,4 +98,11 @@
 
     </div>
     <!-- /.content -->
+
+    <form action="{{ route('adjustment.destroy', $data->id) }}" method="POST" id="form_delete">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
+@push('jslib')
+@endpush

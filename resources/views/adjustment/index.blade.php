@@ -92,8 +92,17 @@
                         data: 'date',
                     },
                     {
-                        data: 'product.name',
+                        data: 'product',
                         defaultContent: '',
+                        render: function(data, type, row, meta) {
+                            if (type === 'display') {
+                                if (data) {
+                                    return `[${data.code ?? ''}] ${data.name}`
+                                }
+                            } else {
+                                return data
+                            }
+                        }
                     },
                     {
                         data: 'type',
